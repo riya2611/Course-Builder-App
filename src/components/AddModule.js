@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const AddModule = ({ data, setData }) => {
     const [title, setTitle] = useState('');
@@ -7,6 +8,7 @@ const AddModule = ({ data, setData }) => {
         e.preventDefault();
         if (title !== '') {
             const obj = {
+                id: uuidv4(),
                 title,
                 type: 'module',
                 content: [],
@@ -27,6 +29,7 @@ const AddModule = ({ data, setData }) => {
                         type="text"
                         id="module"
                         placeholder="Enter the name of the module"
+                        value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         className="w-full rounded-md p-2 text-xl border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />

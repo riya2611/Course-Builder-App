@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import AddLinks from './AddLinks';
 import AddModule from './AddModule';
-import { type } from '@testing-library/user-event/dist/type';
+import { v4 as uuidv4 } from 'uuid';
 
 const Header = ({ data, setData }) => {
     const [module, setModule] = useState(false);
@@ -17,6 +17,7 @@ const Header = ({ data, setData }) => {
             reader.onload = function () {
                 var base64String = reader.result.split(',')[1];
                 const obj = {
+                    id: uuidv4(),
                     title: fileRef.current.files[0].name,
                     type: "file",
                     content: base64String

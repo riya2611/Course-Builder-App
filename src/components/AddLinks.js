@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const AddLinks = ({ data, setData }) => {
   const [title, setTitle] = useState('');
@@ -8,6 +9,7 @@ const AddLinks = ({ data, setData }) => {
     e.preventDefault();
     if (title !== '' && url !== '') {
       const obj = {
+        id: uuidv4(),
         title,
         type: 'link',
         url,
@@ -29,6 +31,7 @@ const AddLinks = ({ data, setData }) => {
           type="text"
           id="linkName"
           placeholder="Enter the name of the link"
+          value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
@@ -38,6 +41,7 @@ const AddLinks = ({ data, setData }) => {
         <input
           type="text"
           id="LinkUrl"
+          value={url}
           placeholder="Enter the Url of the link"
           onChange={(e) => setUrl(e.target.value)}
           className="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"

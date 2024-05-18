@@ -1,26 +1,29 @@
+import { DndContext, closestCenter } from '@dnd-kit/core';
 import React, { useState } from 'react';
+import ModuleComponent from './ModuleComponent';
+import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 const DisplayCourse = ({ data, setData }) => {
     // for editing name
     const [editName, setEditName] = useState(false)
-    const [editid, setEditid] = useState(-1);
+    const [editid, setEditid] = useState("");
     const [newName, setNewName] = useState("");
 
     // for editing url
     const [editLinkDialog, setEditLinkDialog] = useState(false);
-    const [editLinkid, setEditLinkid] = useState(-1);
+    const [editLinkid, setEditLinkid] = useState("");
     const [editLinkUrl, setEditLinkUrl] = useState("");
     const [editLinkName, setEditLinkName] = useState("");
 
     // For Resources
     const [editFileDialog, setEditFileDialog] = useState(false);
-    const [editFileid, setEditFileid] = useState(-1);
+    const [editFileid, setEditFileid] = useState("");
     const [editFileName, setEditFileName] = useState("");
 
     const SubmitEditName = (e) => {
         e.preventDefault();
-        const modules = data.modules.map((item, ind) => {
-            if (ind === editid) {
+        const modules = data.modules.map((item) => {
+            if (item.id === editid) {
                 item.title = newName;
             }
             return item;
@@ -41,8 +44,8 @@ const DisplayCourse = ({ data, setData }) => {
 
     const HandleEditLinkName = (e) => {
         e.preventDefault();
-        const links = data.links.map((item, ind) => {
-            if (ind === editLinkid) {
+        const links = data.links.map((item) => {
+            if (item.id === editLinkid) {
                 item.title = editLinkName;
                 item.url = editLinkUrl
             }
@@ -57,8 +60,8 @@ const DisplayCourse = ({ data, setData }) => {
 
     const handleEditFileName = (e) => {
         e.preventDefault();
-        const resources = data.resources.map((item, ind) => {
-            if (ind === editFileid) {
+        const resources = data.resources.map((item) => {
+            if (item.id === editFileid) {
                 item.title = editFileName;
             }
             return item;
@@ -69,58 +72,61 @@ const DisplayCourse = ({ data, setData }) => {
         setEditFileid(-1);
     }
 
+    const onDragEnd = (event) => {
+        const { active, over } = event;
+        if (active.id === over.id) return;
+
+        const oldIndex = data.modules.findIndex((item) => item.id === active.id);
+        const newIndex = data.modules.findIndex((item) => item.id === over.id);
+        const modules = arrayMove(data.modules, oldIndex, newIndex);
+        setData({ ...data, modules });
+    }
+
     return (
         <div className="container mx-auto px-4 py-8"> {/* Tailwind classes */}
             <h1 className="text-2xl font-bold mb-4">My Course</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* Tailwind classes */}
+            <div className="flex flex-col"> {/* Tailwind classes */}
                 <dialog open={editName}>
                     <div>
                         <form onSubmit={SubmitEditName}>
                             <input type="text" placeholder='New name for module ' value={newName} onChange={(e) => { setNewName(e.target.value) }} />
                             <button type='submit'>Submit</button>
-                            <button onClick={() => { setEditName(false); setEditid(-1); setNewName(""); }}>Cancel</button>
+                            <button onClick={() => { setEditName(false); setEditid(""); setNewName(""); }}>Cancel</button>
                         </form>
                     </div>
                 </dialog>
-                {
-                    data.modules.map((item, ind) => (
-                        <div key={ind} className="bg-white rounded-lg p-4 shadow-md"> {/* Tailwind classes */}
-                            <h2 className="text-xl font-bold mb-2">{item.title}</h2> {/* Module title */}
-                            <button onClick={() => {
-                                setEditName(true);
-                                setEditid(ind);
-                            }}>Edit module name</button>
-                            <button onClick={() => {
-                                const modules = data.modules.filter((item, i) => i !== ind);
-                                setData({ ...data, modules })
-                            }}>Delete module</button>
-                        </div>
-                    ))
-                }
+
+                <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+                    <SortableContext items={data.modules} strategy={verticalListSortingStrategy} className="flex flex-col items-center">
+                        {data.modules.map((item) => (
+                            <ModuleComponent key={item.id} item={item} data={data} setData={setData} setEditid={setEditid} setEditName={setEditName} />
+                        ))}
+                    </SortableContext>
+                </DndContext>
+
             </div >
 
 
             <h2 className="text-xl font-bold mt-8">Links</h2> {/* Section header for links */}
             <div className="flex flex-wrap gap-2"> {/* Tailwind classes */}
-                {data.links.map((item, ind) => (
-                    <div key={ind}>
-                        <dialog open={editLinkDialog}>
-                            <form onSubmit={HandleEditLinkName}>
-                                <label htmlFor="name">Enter link name : </label>
-                                <input type="text" id='name' value={editLinkName} onChange={(e) => setEditLinkName(e.target.value)} />
-                                <label htmlFor="url">Enter url</label>
-                                <input type="text" id='url' value={editLinkUrl} onChange={(e) => setEditLinkUrl(e.target.value)} />
-                                <button onClick={() => {
-                                    setEditLinkDialog(false);
-                                    setEditLinkName("");
-                                    setEditLinkUrl("");
-                                    setEditLinkid(-1);
-                                }}>Cancel</button>
-                                <button type='submit'>Submit</button>
-                            </form>
-                        </dialog>
+                <dialog open={editLinkDialog}>
+                    <form onSubmit={HandleEditLinkName}>
+                        <label htmlFor="name">Enter link name : </label>
+                        <input type="text" id='name' value={editLinkName} onChange={(e) => setEditLinkName(e.target.value)} />
+                        <label htmlFor="url">Enter url</label>
+                        <input type="text" id='url' value={editLinkUrl} onChange={(e) => setEditLinkUrl(e.target.value)} />
+                        <button onClick={() => {
+                            setEditLinkDialog(false);
+                            setEditLinkName("");
+                            setEditLinkUrl("");
+                            setEditLinkid("");
+                        }}>Cancel</button>
+                        <button type='submit'>Submit</button>
+                    </form>
+                </dialog>
+                {data.links.map((item) => (
+                    <div key={item.id}>
                         <button
-                            key={ind}
                             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none"
                             onClick={() => {
                                 if (!item.url.startsWith('https://')) {
@@ -132,9 +138,9 @@ const DisplayCourse = ({ data, setData }) => {
                         >
                             {item.title}
                         </button>
-                        <button onClick={() => { setEditLinkDialog(true); setEditLinkid(ind) }}>Edit</button>
+                        <button onClick={() => { setEditLinkDialog(true); setEditLinkid(item.id) }}>Edit</button>
                         <button onClick={() => {
-                            const links = data.links.filter((item, i) => i !== ind);
+                            const links = data.links.filter((i) => i.id !== item.id);
                             setData({ ...data, links })
                         }}>
                             Delete
@@ -153,12 +159,12 @@ const DisplayCourse = ({ data, setData }) => {
                         <button onClick={() => {
                             setEditFileDialog(false);
                             setEditFileName("");
-                            setEditFileid(-1);
+                            setEditFileid("");
                         }}>Cancel</button>
                     </form>
                 </dialog>
-                {data.resources.map((item, ind) => (
-                    <div key={ind} className="flex items-center gap-2"> {/* Tailwind classes */}
+                {data.resources.map((item) => (
+                    <div key={item.id} className="flex items-center gap-2"> {/* Tailwind classes */}
                         <h3 className="text-lg font-medium">{item.title}</h3> {/* Resource title */}
                         <button
                             className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-700 focus:outline-none"
@@ -167,8 +173,8 @@ const DisplayCourse = ({ data, setData }) => {
                             Download
                         </button>
                         <button onClick={() => {
-                            const resources = data.resources.filter((item, i) =>
-                                i !== ind
+                            const resources = data.resources.filter((i) =>
+                                i.id !== item.id
                             )
                             setData({ ...data, resources })
                         }}>
@@ -176,7 +182,7 @@ const DisplayCourse = ({ data, setData }) => {
                         </button>
                         <button onClick={() => {
                             setEditFileDialog(true);
-                            setEditFileid(ind);
+                            setEditFileid(item.id);
                         }}>
                             Edit Name
                         </button>
@@ -186,5 +192,6 @@ const DisplayCourse = ({ data, setData }) => {
         </div >
     );
 };
+
 
 export default DisplayCourse;
