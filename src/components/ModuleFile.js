@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import { useSortable } from '@dnd-kit/sortable'
 
-const ModuleFile = ({ item, data, setData }) => {
+const ModuleFile = ({ item, data, setData, setFileDialog, setEditModuleFileName, editModuleFileName, setmyItem }) => {
     const sortable = useSortable({
         id: item.id, data: {
             title: item
@@ -35,6 +35,9 @@ const ModuleFile = ({ item, data, setData }) => {
         link.remove();
     };
 
+    // File States
+
+
 
     return (
         <div ref={sortable.setNodeRef} {...sortable.attributes} {...sortable.listeners} style={style1}>
@@ -50,18 +53,19 @@ const ModuleFile = ({ item, data, setData }) => {
                 </button>
                 <button onClick={
                     () => {
-                        const modules = data.modules.map((i) => {
+                        const modules = data.modules((i) => {
                             if (item.pid === i.id) {
                                 const content = i.content.filter((it) => it.id !== item.id);
                                 item.content = content;
                             }
-                            return item;
+                            return i;
                         })
                         setData({ ...data, modules });
                     }
-                } className='m-2 p-2 bg-red-300'>
+                }>
                     Delete
                 </button>
+                <button onClick={() => { setFileDialog(true); setmyItem(item) }}>Edit Name</button>
             </div>
         </div>
     )

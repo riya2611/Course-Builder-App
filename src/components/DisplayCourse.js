@@ -141,7 +141,34 @@ const DisplayCourse = ({ data, setData }) => {
     }
 
 
+    const [fileDialog, setFileDialog] = useState(false);
+    const [editModuleFileName, setEditModuleFileName] = useState("");
+    const [myItem, setmyItem] = useState({});
 
+
+
+
+
+    const handleEditModuleFileName = (e) => {
+
+        e.preventDefault();
+        console.log("hey")
+        const modules = data.modules.map((i) => {
+            if (i.id === myItem.pid) {
+                const content = i.content.map((it) => {
+                    if (it.id === myItem.id) {
+                        it.title = editModuleFileName;
+                    }
+                    return it;
+                })
+                i.content = content;
+            }
+            return i;
+        })
+        setData({ ...data, modules })
+        setFileDialog(false);
+        setEditModuleFileName("");
+    }
     return (
         <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
             <div className="container mx-auto px-4 py-8"> {/* Tailwind classes */}
@@ -157,9 +184,21 @@ const DisplayCourse = ({ data, setData }) => {
                         </div>
                     </dialog>
 
+                    <dialog open={fileDialog} className=''>
+                        <form onSubmit={handleEditModuleFileName}>
+                            <label htmlFor="FileName">New file name</label>
+                            <input type="text" placeholder='Enter the name of file' value={editModuleFileName} onChange={(e) => setEditModuleFileName(e.target.value)} />
+                            <button type='submit'>Submit</button>
+                            <button onClick={() => {
+                                setFileDialog(false);
+                                setEditModuleFileName("");
+                            }}>Cancel</button>
+                        </form>
+                    </dialog>
+
                     <SortableContext items={data.modules} strategy={verticalListSortingStrategy} className="flex flex-col items-center">
                         {data.modules.map((item) => (
-                            <ModuleComponent key={item.id} item={item} data={data} setData={setData} setEditid={setEditid} setEditName={setEditName} editFileDialog={editFileDialog} editFileid={editFileid} handleDownload={handleDownload} setEditLinkDialog={setEditLinkDialog} setEditLinkid={setEditLinkid} />
+                            <ModuleComponent key={item.id} item={item} data={data} setData={setData} setEditid={setEditid} setEditName={setEditName} setFileDialog={setFileDialog} setEditModuleFileName={setEditModuleFileName} editModuleFileName={editModuleFileName} setmyItem={setmyItem} />
                         ))}
                     </SortableContext>
 

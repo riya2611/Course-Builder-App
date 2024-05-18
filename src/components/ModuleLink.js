@@ -47,9 +47,9 @@ const ModuleLink = ({ item, data, setData }) => {
                         const modules = data.modules.map((i) => {
                             if (item.pid === i.id) {
                                 const content = i.content.filter((it) => it.id !== item.id);
-                                item.content = content;
+                                i.content = content;
                             }
-                            return item;
+                            return i;
                         })
                         setData({ ...data, modules });
                     }
