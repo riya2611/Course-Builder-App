@@ -3,7 +3,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 
-const ModuleLink = ({ item, data, setData }) => {
+const ModuleLink = ({ item, data, setData, setLinkDialog, setLinkItem }) => {
 
     const sortable = useSortable({
         id: item.id, data: {
@@ -26,6 +26,7 @@ const ModuleLink = ({ item, data, setData }) => {
         transition: sortable.transition,
         transform: CSS.Translate.toString(sortable.transform)
     }
+
 
     return (
         <div ref={sortable.setNodeRef} {...sortable.attributes} {...sortable.listeners} style={style1}>
@@ -55,6 +56,13 @@ const ModuleLink = ({ item, data, setData }) => {
                     }
                 } className='m-2 p-2 bg-red-300'>
                     Delete
+                </button>
+
+                <button onClick={() => {
+                    setLinkDialog(true);
+                    setLinkItem(item);
+                }}>
+                    Edit
                 </button>
             </div>
         </div>

@@ -7,7 +7,7 @@ import ModuleLink from './ModuleLink';
 import { SortableContext } from '@dnd-kit/sortable';
 
 
-const ModuleComponent = ({ item, data, setData, setEditid, setEditName, setFileDialog, setEditModuleFileName, editModuleFileName, setmyItem }) => {
+const ModuleComponent = ({ item, data, setData, setEditid, setEditName, setFileDialog, setmyItem, setLinkItem, setLinkDialog }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
         id: item.id, data: {
             title: item
@@ -38,9 +38,9 @@ const ModuleComponent = ({ item, data, setData, setEditid, setEditName, setFileD
                 <SortableContext items={item.content} strategy={verticalListSortingStrategy}>
                     {item.content.map((i) => {
                         if (i.type === "mfile") {
-                            return <ModuleFile key={i.id} item={i} data={data} setData={setData} setFileDialog={setFileDialog} setEditModuleFileName={setEditModuleFileName} editModuleFileName={editModuleFileName} setmyItem={setmyItem} />
+                            return <ModuleFile key={i.id} item={i} data={data} setData={setData} setFileDialog={setFileDialog} setmyItem={setmyItem} />
                         }
-                        return <ModuleLink key={i.id} item={i} data={data} setData={setData} />
+                        return <ModuleLink key={i.id} item={i} data={data} setData={setData} setLinkDialog={setLinkDialog} setLinkItem={setLinkItem} />
 
                     })}
                 </SortableContext>

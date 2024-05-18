@@ -140,19 +140,22 @@ const DisplayCourse = ({ data, setData }) => {
 
     }
 
-
+    // module file name edit
     const [fileDialog, setFileDialog] = useState(false);
     const [editModuleFileName, setEditModuleFileName] = useState("");
     const [myItem, setmyItem] = useState({});
 
-
+    // module link edit
+    const [linkDialog, setLinkDialog] = useState(false);
+    const [moduleUrl, setModuleUrl] = useState("");
+    const [moduleUrlName, setModuleUrlName] = useState("");
+    const [linkItem, setLinkItem] = useState({})
 
 
 
     const handleEditModuleFileName = (e) => {
 
         e.preventDefault();
-        console.log("hey")
         const modules = data.modules.map((i) => {
             if (i.id === myItem.pid) {
                 const content = i.content.map((it) => {
@@ -168,6 +171,29 @@ const DisplayCourse = ({ data, setData }) => {
         setData({ ...data, modules })
         setFileDialog(false);
         setEditModuleFileName("");
+        setmyItem({});
+    }
+
+    const HandleEditModuleLink = (e) => {
+        e.preventDefault();
+        const modules = data.modules.map((i) => {
+            if (i.id === linkItem.pid) {
+                const content = i.content.map((it) => {
+                    if (it.id === linkItem.id) {
+                        it.title = moduleUrlName;
+                        it.url = moduleUrl;
+                    }
+                    return it;
+                })
+                i.content = content;
+            }
+            return i;
+        })
+        setData({ ...data, modules })
+        setLinkDialog(false);
+        setModuleUrl("");
+        setLinkItem({});
+        setModuleUrlName("")
     }
     return (
         <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
@@ -196,9 +222,27 @@ const DisplayCourse = ({ data, setData }) => {
                         </form>
                     </dialog>
 
+                    <dialog open={linkDialog}>
+                        <form onSubmit={HandleEditModuleLink}>
+                            <label htmlFor="url">Enter url</label>
+                            <input type="text" id='url' value={moduleUrl} onChange={(e) => setModuleUrl(e.target.value)} />
+                            <label htmlFor="name">Enter link name : </label>
+                            <input type="text" id='name' value={moduleUrlName} onChange={(e) => setModuleUrlName(e.target.value)} />
+                            <button onClick={() => {
+                                setLinkDialog(false);
+                                setModuleUrl("");
+                                setModuleUrlName("");
+                                setLinkItem({});
+                            }}>Cancel</button>
+                            <button type='submit'>Submit</button>
+                        </form>
+                    </dialog>
+
                     <SortableContext items={data.modules} strategy={verticalListSortingStrategy} className="flex flex-col items-center">
                         {data.modules.map((item) => (
-                            <ModuleComponent key={item.id} item={item} data={data} setData={setData} setEditid={setEditid} setEditName={setEditName} setFileDialog={setFileDialog} setEditModuleFileName={setEditModuleFileName} editModuleFileName={editModuleFileName} setmyItem={setmyItem} />
+                            <ModuleComponent key={item.id} item={item} data={data} setData={setData} setEditid={setEditid} setEditName={setEditName} setFileDialog={setFileDialog} setmyItem={setmyItem}
+                                setLinkDialog={setLinkDialog} setLinkItem={setLinkItem}
+                            />
                         ))}
                     </SortableContext>
 
