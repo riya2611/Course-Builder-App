@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Header from './components/Header'
 import DisplayCourse from './components/DisplayCourse'
 
 const App = () => {
-  const [data, setData] = useState({
+  const [data, setData] = useState(JSON.parse(localStorage.getItem("dataKey")) || {
     modules: [],
     resources: [],
     links: []
   })
 
+  useEffect(() => {
+    localStorage.setItem('dataKey', JSON.stringify(data));
+  }, [data]);
 
   return (
     <div>

@@ -33,11 +33,11 @@ const ModuleComponent = ({ item, data, setData, setEditid, setEditName }) => {
             </div>
             <div className='w-[50%] flex flex-col'>
                 <SortableContext items={item.content} strategy={verticalListSortingStrategy}>
-                    {item.content.map((item) => {
-                        if (item.type === "mfile") {
-                            return <ModuleFile key={item.id} item={item} data={data} setData={setData} />
+                    {item.content.length > 0 && item.content.map((i) => {
+                        if (i.type === "mfile") {
+                            return <ModuleFile key={i.id} item={i} data={data} setData={setData} />
                         }
-                        return <ModuleLink key={item.id} item={item} data={data} setData={setData} />
+                        return <ModuleLink key={i.id} item={i} data={data} setData={setData} />
 
                     })}
                 </SortableContext>

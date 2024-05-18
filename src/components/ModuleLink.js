@@ -42,7 +42,20 @@ const ModuleLink = ({ item, data, setData }) => {
                 >
                     {item.title}
                 </button>
-
+                <button onClick={
+                    () => {
+                        const modules = data.modules.map((i) => {
+                            if (item.pid === i.id) {
+                                const content = i.content.filter((it) => it.id !== item.id);
+                                item.content = content;
+                            }
+                            return item;
+                        })
+                        setData({ ...data, modules });
+                    }
+                } className='m-2 p-2 bg-red-300'>
+                    Delete
+                </button>
             </div>
         </div>
     )
