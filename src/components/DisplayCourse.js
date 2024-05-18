@@ -2,6 +2,8 @@ import { DndContext, closestCenter } from '@dnd-kit/core';
 import React, { useState } from 'react';
 import ModuleComponent from './ModuleComponent';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import LinkComponent from './LinkComponent';
+import ResourceComponent from './ResourceComponent';
 
 const DisplayCourse = ({ data, setData }) => {
     // for editing name
@@ -74,122 +76,121 @@ const DisplayCourse = ({ data, setData }) => {
 
     const onDragEnd = (event) => {
         const { active, over } = event;
-        if (active.id === over.id) return;
+        const myactive = active.data.current.title;
+        const myover = over.data.current.title;
+        console.log(myactive);
+        console.log(myover);
 
-        const oldIndex = data.modules.findIndex((item) => item.id === active.id);
-        const newIndex = data.modules.findIndex((item) => item.id === over.id);
-        const modules = arrayMove(data.modules, oldIndex, newIndex);
-        setData({ ...data, modules });
+        if (myactive.type === "module" && myover.type === "module") {
+            if (active.id === over.id) return;
+
+            const oldIndex = data.modules.findIndex((item) => item.id === active.id);
+            const newIndex = data.modules.findIndex((item) => item.id === over.id);
+            const modules = arrayMove(data.modules, oldIndex, newIndex);
+            setData({ ...data, modules })
+            return
+        }
+        if (myactive.type === "file" && (myover.type === "module")) {
+            myactive.type = "mfile";
+            myactive.pid = myover.id
+            const modules = data.modules.map((item) => {
+                if (item.id === myover.id) {
+                    item.content.push(myactive);
+                }
+                return item;
+            })
+
+            const resources = data.resources.filter((item) => item.id !== myactive.id);
+            setData({ ...data, modules, resources })
+        }
+
+        if (myactive.type === "link" && myover.type === "module") {
+            myactive.type = "mlink";
+            myactive.pid = myover.id;
+            const modules = data.modules.map((item) => {
+                if (item.id === myover.id) {
+                    item.content.push(myactive);
+                }
+                return item;
+            })
+
+            const links = data.links.filter((item) => item.id !== myactive.id);
+            setData({ ...data, modules, links })
+        }
+    }
+
+    const handleOnDragEnd = (e) => {
+        console.log("dragged")
+        console.log(e);
     }
 
     return (
-        <div className="container mx-auto px-4 py-8"> {/* Tailwind classes */}
-            <h1 className="text-2xl font-bold mb-4">My Course</h1>
-            <div className="flex flex-col"> {/* Tailwind classes */}
-                <dialog open={editName}>
-                    <div>
-                        <form onSubmit={SubmitEditName}>
-                            <input type="text" placeholder='New name for module ' value={newName} onChange={(e) => { setNewName(e.target.value) }} />
-                            <button type='submit'>Submit</button>
-                            <button onClick={() => { setEditName(false); setEditid(""); setNewName(""); }}>Cancel</button>
-                        </form>
-                    </div>
-                </dialog>
+        <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+            <div className="container mx-auto px-4 py-8"> {/* Tailwind classes */}
+                <h1 className="text-2xl font-bold mb-4">My Course</h1>
+                <div className="flex flex-col"> {/* Tailwind classes */}
+                    <dialog open={editName}>
+                        <div>
+                            <form onSubmit={SubmitEditName}>
+                                <input type="text" placeholder='New name for module ' value={newName} onChange={(e) => { setNewName(e.target.value) }} />
+                                <button type='submit'>Submit</button>
+                                <button onClick={() => { setEditName(false); setEditid(""); setNewName(""); }}>Cancel</button>
+                            </form>
+                        </div>
+                    </dialog>
 
-                <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
                     <SortableContext items={data.modules} strategy={verticalListSortingStrategy} className="flex flex-col items-center">
                         {data.modules.map((item) => (
-                            <ModuleComponent key={item.id} item={item} data={data} setData={setData} setEditid={setEditid} setEditName={setEditName} />
+                            <ModuleComponent key={item.id} item={item} data={data} setData={setData} setEditid={setEditid} setEditName={setEditName} editFileDialog={editFileDialog} editFileid={editFileid} handleDownload={handleDownload} setEditLinkDialog={setEditLinkDialog} setEditLinkid={setEditLinkid} />
                         ))}
                     </SortableContext>
-                </DndContext>
 
+                </div >
+
+
+                <h2 className="text-xl font-bold mt-8">Links</h2> {/* Section header for links */}
+                <div className="flex flex-wrap gap-2 flex-col"> {/* Tailwind classes */}
+                    <dialog open={editLinkDialog}>
+                        <form onSubmit={HandleEditLinkName}>
+                            <label htmlFor="name">Enter link name : </label>
+                            <input type="text" id='name' value={editLinkName} onChange={(e) => setEditLinkName(e.target.value)} />
+                            <label htmlFor="url">Enter url</label>
+                            <input type="text" id='url' value={editLinkUrl} onChange={(e) => setEditLinkUrl(e.target.value)} />
+                            <button onClick={() => {
+                                setEditLinkDialog(false);
+                                setEditLinkName("");
+                                setEditLinkUrl("");
+                                setEditLinkid("");
+                            }}>Cancel</button>
+                            <button type='submit'>Submit</button>
+                        </form>
+                    </dialog>
+                    {data.links.map((item) => (
+                        <LinkComponent key={item.id}
+                            item={item} data={data} setData={setData} setEditLinkDialog={setEditLinkDialog} setEditLinkid={setEditLinkid} />
+                    ))}
+                </div>
+
+                <h2 className="text-xl font-bold mt-8">Resources</h2> {/* Section header for resources */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* Tailwind classes */}
+                    <dialog open={editFileDialog}>
+                        <form onSubmit={handleEditFileName}>
+                            <label htmlFor="FileName">New file name</label>
+                            <input type="text" placeholder='Enter the name of file' value={editFileName} onChange={(e) => setEditFileName(e.target.value)} />
+                            <button type='submit'>Submit</button>
+                            <button onClick={() => {
+                                setEditFileDialog(false);
+                                setEditFileName("");
+                                setEditFileid("");
+                            }}>Cancel</button>
+                        </form>
+                    </dialog>
+                    {data.resources.map((item) => (
+                        <ResourceComponent key={item.id} item={item} data={data} setData={setData} handleDownload={handleDownload} setEditFileDialog={setEditFileDialog} setEditFileid={setEditFileid} />
+                    ))}
+                </div>
             </div >
-
-
-            <h2 className="text-xl font-bold mt-8">Links</h2> {/* Section header for links */}
-            <div className="flex flex-wrap gap-2"> {/* Tailwind classes */}
-                <dialog open={editLinkDialog}>
-                    <form onSubmit={HandleEditLinkName}>
-                        <label htmlFor="name">Enter link name : </label>
-                        <input type="text" id='name' value={editLinkName} onChange={(e) => setEditLinkName(e.target.value)} />
-                        <label htmlFor="url">Enter url</label>
-                        <input type="text" id='url' value={editLinkUrl} onChange={(e) => setEditLinkUrl(e.target.value)} />
-                        <button onClick={() => {
-                            setEditLinkDialog(false);
-                            setEditLinkName("");
-                            setEditLinkUrl("");
-                            setEditLinkid("");
-                        }}>Cancel</button>
-                        <button type='submit'>Submit</button>
-                    </form>
-                </dialog>
-                {data.links.map((item) => (
-                    <div key={item.id}>
-                        <button
-                            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none"
-                            onClick={() => {
-                                if (!item.url.startsWith('https://')) {
-                                    window.location.href = `https://${item.url}`;
-                                } else {
-                                    window.location.href = item.url;
-                                }
-                            }}
-                        >
-                            {item.title}
-                        </button>
-                        <button onClick={() => { setEditLinkDialog(true); setEditLinkid(item.id) }}>Edit</button>
-                        <button onClick={() => {
-                            const links = data.links.filter((i) => i.id !== item.id);
-                            setData({ ...data, links })
-                        }}>
-                            Delete
-                        </button>
-                    </div>
-                ))}
-            </div>
-
-            <h2 className="text-xl font-bold mt-8">Resources</h2> {/* Section header for resources */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* Tailwind classes */}
-                <dialog open={editFileDialog}>
-                    <form onSubmit={handleEditFileName}>
-                        <label htmlFor="FileName">New file name</label>
-                        <input type="text" placeholder='Enter the name of file' value={editFileName} onChange={(e) => setEditFileName(e.target.value)} />
-                        <button type='submit'>Submit</button>
-                        <button onClick={() => {
-                            setEditFileDialog(false);
-                            setEditFileName("");
-                            setEditFileid("");
-                        }}>Cancel</button>
-                    </form>
-                </dialog>
-                {data.resources.map((item) => (
-                    <div key={item.id} className="flex items-center gap-2"> {/* Tailwind classes */}
-                        <h3 className="text-lg font-medium">{item.title}</h3> {/* Resource title */}
-                        <button
-                            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-700 focus:outline-none"
-                            onClick={() => handleDownload(item)}
-                        >
-                            Download
-                        </button>
-                        <button onClick={() => {
-                            const resources = data.resources.filter((i) =>
-                                i.id !== item.id
-                            )
-                            setData({ ...data, resources })
-                        }}>
-                            delete
-                        </button>
-                        <button onClick={() => {
-                            setEditFileDialog(true);
-                            setEditFileid(item.id);
-                        }}>
-                            Edit Name
-                        </button>
-                    </div>
-                ))}
-            </div>
-        </div >
+        </DndContext>
     );
 };
 
