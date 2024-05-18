@@ -212,31 +212,58 @@ const DisplayCourse = ({ data, setData }) => {
                         </div>
                     </dialog>
 
-                    <dialog open={fileDialog} className=''>
+                    <dialog className="rounded-md" open={fileDialog}>
                         <form onSubmit={handleEditModuleFileName}>
-                            <label htmlFor="FileName">New file name</label>
-                            <input type="text" placeholder='Enter the name of file' value={editModuleFileName} onChange={(e) => setEditModuleFileName(e.target.value)} />
-                            <button type='submit'>Submit</button>
-                            <button onClick={() => {
+                            <span className='flex flex-col'>
+                                <div>
+                                    <label htmlFor="FileName" className='m-2 mt-4 font-medium'>New file name: </label>
+                                    <input type="text" className='m-2 mt-4 font-basic border border-gray-400 rounded-md'  placeholder='Enter the name of file' value={editModuleFileName} onChange={(e) => setEditModuleFileName(e.target.value)} />
+                                </div>
+
+                                <button 
+                                className='mt-8 bg-blue-400 m-2 p-2 rounded-md text-white hover:bg-blue-700 '
+                                type='submit'>Submit
+                                </button>
+                                
+                                <button 
+                                className='bg-red-400 m-2 p-2 rounded-md text-white hover:bg-red-700 '
+                                onClick={() => {
                                 setFileDialog(false);
                                 setEditModuleFileName("");
                             }}>Cancel</button>
+                            </span>
                         </form>
                     </dialog>
 
-                    <dialog open={linkDialog}>
+                    <dialog className='rounded-md' open={linkDialog}>
                         <form onSubmit={HandleEditModuleLink}>
-                            <label htmlFor="url">Enter url</label>
-                            <input type="text" id='url' value={moduleUrl} onChange={(e) => setModuleUrl(e.target.value)} />
-                            <label htmlFor="name">Enter link name : </label>
-                            <input type="text" id='name' value={moduleUrlName} onChange={(e) => setModuleUrlName(e.target.value)} />
-                            <button onClick={() => {
+                            
+                            <span className='flex flex-col'>
+                            
+                            <div>
+                               <label htmlFor="url" className='m-2 mt-4 font-medium'>Enter url: </label>
+                                <input type="text" id='url' className='m-2 mt-4 font-basic border border-gray-400 rounded-md' placeholder=' Enter url here' value={moduleUrl} onChange={(e) => setModuleUrl(e.target.value)} />
+                            </div>
+
+                            <div>
+                               <label htmlFor="name" className='m-2 mt-2 font-medium'>Enter link name: </label>
+                               <input type="text" id='name'  className='m-2 mt-2 font-basic border border-gray-400 rounded-md' placeholder=' Enter link name here' value={moduleUrlName} onChange={(e) => setModuleUrlName(e.target.value)} />
+                            </div>
+
+                            <button 
+                            className='mt-8 bg-blue-400 m-2 p-2 rounded-md text-white hover:bg-blue-700 '
+                            type='submit'>Submit</button>
+                            <button 
+                            className='bg-red-400 m-2 p-2 rounded-md text-white hover:bg-red-700 '
+                            onClick={() => {
                                 setLinkDialog(false);
                                 setModuleUrl("");
                                 setModuleUrlName("");
                                 setLinkItem({});
-                            }}>Cancel</button>
-                            <button type='submit'>Submit</button>
+                            }}>Cancel
+                            </button>
+
+                            </span>
                         </form>
                     </dialog>
 
@@ -275,17 +302,23 @@ const DisplayCourse = ({ data, setData }) => {
                 </div>
 
                 <h2 className="text-xl font-bold mt-8">Resources</h2> {/* Section header for resources */}
-                <div className="flex flex-col "> {/* Tailwind classes */}
-                    <dialog open={editFileDialog}>
+                <div className="flex flex-col items-center"> {/* Tailwind classes */}
+                    <dialog className="rounded-md" open={editFileDialog}>
                         <form onSubmit={handleEditFileName}>
-                            <label htmlFor="FileName">New file name</label>
-                            <input type="text" placeholder='Enter the name of file' value={editFileName} onChange={(e) => setEditFileName(e.target.value)} />
+
+                            <span className='flex flex-col'>
+                            <div>
+                                <label htmlFor="FileName" className='m-2 mt-4 font-medium' >New file name: </label>
+                                <input type="text" className='m-2 mt-4 font-basic border border-gray-400 rounded-md'  placeholder='Enter the name of file' value={editFileName} onChange={(e) => setEditFileName(e.target.value)} />
+                            </div>
+
                             <button type='submit'>Submit</button>
                             <button onClick={() => {
                                 setEditFileDialog(false);
                                 setEditFileName("");
                                 setEditFileid("");
                             }}>Cancel</button>
+                            </span>
                         </form>
                     </dialog>
                     {data.resources.map((item) => (

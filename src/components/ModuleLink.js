@@ -30,9 +30,10 @@ const ModuleLink = ({ item, data, setData, setLinkDialog, setLinkItem }) => {
 
     return (
         <div ref={sortable.setNodeRef} {...sortable.attributes} {...sortable.listeners} style={style1}>
-            <div className='bg-slate-400 m-2 p-2 text-2xl' ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            <div 
+            className='flex items-center gap-2 bg-gray-100 mt-2 rounded-md' ref={setNodeRef} style={style} {...attributes} {...listeners}>
                 <button
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none"
+                    className="text-left focus:outline-none px-4 py-2 text-lg font-medium hover:text-blue-500"
                     onClick={() => {
                         if (!item.url.startsWith('https://')) {
                             window.location.href = `https://${item.url}`;
@@ -43,7 +44,19 @@ const ModuleLink = ({ item, data, setData, setLinkDialog, setLinkItem }) => {
                 >
                     {item.title}
                 </button>
-                <button onClick={
+
+                <button 
+                className="px-3 py-1 text-sm font-medium text-center text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none" 
+                onClick={() => {
+                    setLinkDialog(true);
+                    setLinkItem(item);
+                }}>
+                    Edit
+                </button>
+                
+                <button 
+                className="px-3 py-1 text-sm font-medium text-center text-white bg-red-500 rounded-md hover:bg-red-700 focus:outline-none"
+                onClick={
                     () => {
                         const modules = data.modules.map((i) => {
                             if (item.pid === i.id) {
@@ -54,16 +67,11 @@ const ModuleLink = ({ item, data, setData, setLinkDialog, setLinkItem }) => {
                         })
                         setData({ ...data, modules });
                     }
-                } className='m-2 p-2 bg-red-300'>
+                }>
                     Delete
                 </button>
 
-                <button onClick={() => {
-                    setLinkDialog(true);
-                    setLinkItem(item);
-                }}>
-                    Edit
-                </button>
+                
             </div>
         </div>
     )

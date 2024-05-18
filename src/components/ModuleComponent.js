@@ -23,10 +23,10 @@ const ModuleComponent = ({ item, data, setData, setEditid, setEditName, setFileD
             {...attributes}
             {...listeners}
             style={style}
-            className="bg-gray-200 rounded-md shadow-md p-4 mb-4"
+            className="bg-gray-200 hover:bg-gray-300 rounded-md shadow-md p-4 mb-4"
         >
-            <div className="flex justify-between items-center mb-2">
-                <h2 className="text-xl font-bold text-gray-700">{item.title}</h2> {/* Module title */}
+            <div className="flex justify-between  items-center mb-2">
+                <h2 className="text-xl font-bold">{item.title}</h2> {/* Module title */}
                 <div className="flex space-x-2">
                     <button
                         onClick={() => {

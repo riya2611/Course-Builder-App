@@ -20,7 +20,7 @@ const ResourceComponent = ({ item, setData, data, setEditFileDialog, setEditFile
             {...attributes}
             {...listeners}
             style={style}
-            className="bg-gray-100 p-4 rounded-md shadow-md flex items-center justify-between"
+            className="bg-gray-100 p-4 hover:bg-gray-300 rounded-md shadow-md flex items-center justify-between"
         >
             <h3 className="text-lg font-medium text-gray-700">{item.title}</h3> {/* Resource title */}
             <div className="flex space-x-2">

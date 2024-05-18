@@ -35,11 +35,19 @@ const LinkComponent = ({ item, data, setData, setEditLinkDialog, setEditLinkid }
                 {item.title}
             </button>
             <div className="flex space-x-2">
-                <button onClick={() => { setEditLinkDialog(true); setEditLinkid(item.id) }} className="px-3 py-1 text-sm font-medium text-center text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none">Edit</button>
-                <button onClick={() => {
+                <button 
+                onClick={() => { setEditLinkDialog(true); setEditLinkid(item.id) }} 
+                className="px-3 py-1 text-sm font-medium text-center text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none">
+                    Edit
+                </button>
+
+                <button 
+                onClick={() => {
                     const links = data.links.filter((i) => i.id !== item.id);
                     setData({ ...data, links })
-                }} className="px-3 py-1 text-sm font-medium text-center text-white bg-red-500 rounded-md hover:bg-red-700 focus:outline-none">Delete</button>
+                }} 
+                className="px-3 py-1 text-sm font-medium text-center text-white bg-red-500 rounded-md hover:bg-red-700 focus:outline-none">
+                    Delete</button>
             </div>
         </div>
     )

@@ -49,11 +49,11 @@ const AddLinks = ({ data, setData }) => {
         <div className="flex space-x-2">
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
+            className="px-4 py-2 border border-gray-300 rounded-md font-normal hover:bg-blue-500 hover:border-gray-800"
           >
             Create
           </button>
-          <button type="button" className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200">
+          <button type="button" className="px-4 py-2 border border-gray-300 rounded-md font-normal hover:bg-red-500  hover:border-gray-800">
             Cancel
           </button>
         </div>
