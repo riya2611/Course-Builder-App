@@ -21,7 +21,7 @@ const AddLinks = ({ data, setData }) => {
   };
 
   return (
-    <div className="flex flex-col space-y-4 p-4 bg-gray-100 rounded-lg shadow-md">
+    <div className="flex flex-col space-y-4 p-4 bg-gray-100 rounded-lg shadow-md text-black">
       <h1 className="text-xl font-bold">Add a Link</h1>
       <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
         <label htmlFor="linkName" className="text-sm font-medium">
@@ -47,7 +47,10 @@ const AddLinks = ({ data, setData }) => {
           className="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
         />
         <div className="flex space-x-2">
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
+          >
             Create
           </button>
           <button type="button" className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200">

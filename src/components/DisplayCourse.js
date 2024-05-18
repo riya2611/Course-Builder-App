@@ -1,4 +1,4 @@
-import { DndContext, closestCenter } from '@dnd-kit/core';
+import { DndContext, closestCenter, closestCorners } from '@dnd-kit/core';
 import React, { useState } from 'react';
 import ModuleComponent from './ModuleComponent';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -75,9 +75,11 @@ const DisplayCourse = ({ data, setData }) => {
     }
 
     const onDragEnd = (event) => {
+        console.log(event);
         const { active, over } = event;
-        const myactive = active.data.current.title;
-        const myover = over.data.current.title;
+        const myactive = active?.data?.current?.title;
+        const myover = over?.data?.current?.title;
+        if (active === null || over === null || myactive === null || myover === null) return;
 
         if (myactive.type === "module" && myover.type === "module") {
             if (active.id === over.id) return;
@@ -196,10 +198,10 @@ const DisplayCourse = ({ data, setData }) => {
         setModuleUrlName("")
     }
     return (
-        <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+        <DndContext collisionDetection={closestCorners} onDragEnd={onDragEnd}>
             <div className="container mx-auto px-4 py-8"> {/* Tailwind classes */}
                 <h1 className="text-2xl font-bold mb-4">My Course</h1>
-                <div className="flex flex-col"> {/* Tailwind classes */}
+                <div className="flex flex-col w-full min-h-[50vh]"> {/* Tailwind classes */}
                     <dialog open={editName}>
                         <div>
                             <form onSubmit={SubmitEditName}>
@@ -238,7 +240,7 @@ const DisplayCourse = ({ data, setData }) => {
                         </form>
                     </dialog>
 
-                    <SortableContext items={data.modules} strategy={verticalListSortingStrategy} className="flex flex-col items-center">
+                    <SortableContext items={data.modules} strategy={verticalListSortingStrategy} className="flex flex-col items-center min-h-[50vh]">
                         {data.modules.map((item) => (
                             <ModuleComponent key={item.id} item={item} data={data} setData={setData} setEditid={setEditid} setEditName={setEditName} setFileDialog={setFileDialog} setmyItem={setmyItem}
                                 setLinkDialog={setLinkDialog} setLinkItem={setLinkItem}
@@ -250,7 +252,7 @@ const DisplayCourse = ({ data, setData }) => {
 
 
                 <h2 className="text-xl font-bold mt-8">Links</h2> {/* Section header for links */}
-                <div className="flex flex-wrap gap-2 flex-col"> {/* Tailwind classes */}
+                <div className="flex flex-wrap gap-2 flex-col min-h-[50vh]"> {/* Tailwind classes */}
                     <dialog open={editLinkDialog}>
                         <form onSubmit={HandleEditLinkName}>
                             <label htmlFor="name">Enter link name : </label>

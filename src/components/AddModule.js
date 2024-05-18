@@ -20,7 +20,7 @@ const AddModule = ({ data, setData }) => {
     };
 
     return (
-        <div className="flex flex-col items-center p-4 rounded-lg shadow-md bg-gray-100"> {/* Tailwind classes */}
+        <div className="flex flex-col items-center p-4 rounded-lg shadow-md bg-gray-100 text-black"> {/* Tailwind classes */}
             <h1 className="text-2xl font-bold text-center">Create New Module</h1> {/* Centered heading */}
             <form onSubmit={handleSubmit} className="flex flex-col space-y-4 w-full"> {/* Tailwind classes */}
                 <div className="flex items-center space-x-4"> {/* Tailwind classes */}
@@ -46,4 +46,4 @@ const AddModule = ({ data, setData }) => {
         </div>
     );
 };
-export default AddModule
+export default AddModule;

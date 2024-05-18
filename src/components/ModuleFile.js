@@ -53,10 +53,10 @@ const ModuleFile = ({ item, data, setData, setFileDialog, setEditModuleFileName,
                 </button>
                 <button onClick={
                     () => {
-                        const modules = data.modules((i) => {
+                        const modules = data.modules.map((i) => {
                             if (item.pid === i.id) {
                                 const content = i.content.filter((it) => it.id !== item.id);
-                                item.content = content;
+                                i.content = content;
                             }
                             return i;
                         })

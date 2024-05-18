@@ -15,9 +15,15 @@ const LinkComponent = ({ item, data, setData, setEditLinkDialog, setEditLinkid }
     }
 
     return (
-        <div ref={setNodeRef} {...attributes} {...listeners} style={style} className='bg-slate-400 m-2 p-2 text-2xl'>
+        <div
+            ref={setNodeRef}
+            {...attributes}
+            {...listeners}
+            style={style}
+            className='flex justify-between items-center p-2 rounded-md bg-gray-200 shadow-md hover:bg-gray-300'
+        >
             <button
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none"
+                className="text-left focus:outline-none px-4 py-2 text-lg font-medium text-gray-700 hover:text-blue-500"
                 onClick={() => {
                     if (!item.url.startsWith('https://')) {
                         window.location.href = `https://${item.url}`;
@@ -28,15 +34,15 @@ const LinkComponent = ({ item, data, setData, setEditLinkDialog, setEditLinkid }
             >
                 {item.title}
             </button>
-            <button onClick={() => { setEditLinkDialog(true); setEditLinkid(item.id) }}>Edit</button>
-            <button onClick={() => {
-                const links = data.links.filter((i) => i.id !== item.id);
-                setData({ ...data, links })
-            }}>
-                Delete
-            </button>
+            <div className="flex space-x-2">
+                <button onClick={() => { setEditLinkDialog(true); setEditLinkid(item.id) }} className="px-3 py-1 text-sm font-medium text-center text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none">Edit</button>
+                <button onClick={() => {
+                    const links = data.links.filter((i) => i.id !== item.id);
+                    setData({ ...data, links })
+                }} className="px-3 py-1 text-sm font-medium text-center text-white bg-red-500 rounded-md hover:bg-red-700 focus:outline-none">Delete</button>
+            </div>
         </div>
     )
 }
 
-export default LinkComponent
+export default LinkComponent;

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react';
 import AddLinks from './AddLinks';
 import AddModule from './AddModule';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,11 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 const Header = ({ data, setData }) => {
     const [module, setModule] = useState(false);
     const [link, setLink] = useState(false);
-    const fileRef = useRef(null)
-
+    const fileRef = useRef(null);
 
     const convertAndStore = () => {
-        const file = fileRef.current.files[0]
+        const file = fileRef.current.files[0];
         if (file) {
             var reader = new FileReader();
             reader.readAsDataURL(file);
@@ -21,11 +20,11 @@ const Header = ({ data, setData }) => {
                     title: fileRef.current.files[0].name,
                     type: "file",
                     content: base64String
-                }
+                };
                 const resources = data.resources;
                 resources.push(obj);
-                setData({ ...data, resources })
-                alert("Successfully uploaded the file.")
+                setData({ ...data, resources });
+                alert("Successfully uploaded the file.");
             };
             reader.onerror = function (error) {
                 console.error('Error:', error);
@@ -34,28 +33,34 @@ const Header = ({ data, setData }) => {
         } else {
             alert('Please select a file.');
         }
-    }
+    };
 
     return (
-        <header className="flex flex-col p-4  transition-all">
-            <div className='flex justify-between p-4 m-2s text-2xl items-center bg-slate-500 rounded-md'>
+        <header className="flex flex-col p-4 bg-gray-700 text-white transition-all"> {/* Tailwind classes */}
+            <div className='flex justify-between p-4 m-2s text-2xl items-center rounded-md'> {/* Tailwind classes */}
                 <div className='text-3xl font-bold w-[30%]'>
                     <h1>Course Hero</h1>
                 </div>
-                <div className='text-xl font-bold  w-[40%] flex justify-between items-center '>
+                <div className='text-xl font-bold  w-[40%] flex justify-between items-center '> {/* Tailwind classes */}
                     <button onClick={() => {
                         setLink(false);
                         setModule(!module);
-                    }}>Add Module</button>
+                    }} className="px-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white"> {/* Tailwind classes */}
+                        Add Module
+                    </button>
                     <button onClick={() => {
                         setLink(!link);
                         setModule(false);
-                    }}>Add Link</button>
-                    <label htmlFor="fileInput" >Add File</label>
+                    }} className="px-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white"> {/* Tailwind classes */}
+                        Add Link
+                    </button>
+                    <label htmlFor="fileInput" className="px-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white cursor-pointer"> {/* Tailwind classes */}
+                        Add File
+                    </label>
                     <input type="file" id='fileInput' hidden onChange={convertAndStore} ref={fileRef} />
                 </div>
-            </div >
-            <div className=' h-[20%] bg-slate-200 m-2 rounded-md p-3'>
+            </div>
+            <div className=' h-[20%] bg-gray-200 rounded-md p-3'> {/* Tailwind classes */}
                 {
                     link && <AddLinks data={data} setData={setData} />
                 }
@@ -64,7 +69,7 @@ const Header = ({ data, setData }) => {
                 }
             </div>
         </header>
-    )
-}
+    );
+};
 
-export default Header
+export default Header;
