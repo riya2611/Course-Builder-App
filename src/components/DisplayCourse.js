@@ -78,8 +78,6 @@ const DisplayCourse = ({ data, setData }) => {
         const { active, over } = event;
         const myactive = active.data.current.title;
         const myover = over.data.current.title;
-        console.log(myactive);
-        console.log(myover);
 
         if (myactive.type === "module" && myover.type === "module") {
             if (active.id === over.id) return;
@@ -102,6 +100,7 @@ const DisplayCourse = ({ data, setData }) => {
 
             const resources = data.resources.filter((item) => item.id !== myactive.id);
             setData({ ...data, modules, resources })
+            return;
         }
 
         if (myactive.type === "link" && myover.type === "module") {
@@ -116,13 +115,32 @@ const DisplayCourse = ({ data, setData }) => {
 
             const links = data.links.filter((item) => item.id !== myactive.id);
             setData({ ...data, modules, links })
+            return;
         }
+
+
+        if ((myactive.type === "mfile" || myactive.type === 'mlink') && (myover.type === "mfile" || myover.type === "mlink")) {
+            if (myactive.pid !== myover.pid) {
+                alert("Cannot be swapped outside modules");
+                return;
+            }
+            console.log("Swapping in progress")
+            const modules = data.modules.map((item) => {
+                if (item.id === myactive.pid) {
+                    const oldIndex = item.content.findIndex((item) => item.id === active.id);
+                    const newIndex = item.content.findIndex((item) => item.id === over.id);
+                    const content = arrayMove(item.content, oldIndex, newIndex);
+                    item.content = content;
+                }
+                return item;
+            });
+            setData({ ...data, modules })
+
+        }
+
     }
 
-    const handleOnDragEnd = (e) => {
-        console.log("dragged")
-        console.log(e);
-    }
+
 
     return (
         <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
@@ -172,7 +190,7 @@ const DisplayCourse = ({ data, setData }) => {
                 </div>
 
                 <h2 className="text-xl font-bold mt-8">Resources</h2> {/* Section header for resources */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* Tailwind classes */}
+                <div className="flex flex-col "> {/* Tailwind classes */}
                     <dialog open={editFileDialog}>
                         <form onSubmit={handleEditFileName}>
                             <label htmlFor="FileName">New file name</label>

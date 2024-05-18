@@ -1,9 +1,10 @@
-import { useDroppable } from '@dnd-kit/core';
-import { useSortable } from '@dnd-kit/sortable';
+
+import { useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React from 'react'
 import ModuleFile from './ModuleFile';
 import ModuleLink from './ModuleLink';
+import { SortableContext } from '@dnd-kit/sortable';
 
 
 const ModuleComponent = ({ item, data, setData, setEditid, setEditName }) => {
@@ -31,14 +32,15 @@ const ModuleComponent = ({ item, data, setData, setEditid, setEditName }) => {
                 }} className='h-20 bg-red-400 w-50'>Delete module</button>
             </div>
             <div className='w-[50%] flex flex-col'>
-                <p>Hey</p>
-                {item.content.map((item) => {
-                    if (item.type === "mfile") {
-                        return <ModuleFile key={item.id} item={item} data={data} setData={setData} />
-                    } else if (item.type === "mlink") {
+                <SortableContext items={item.content} strategy={verticalListSortingStrategy}>
+                    {item.content.map((item) => {
+                        if (item.type === "mfile") {
+                            return <ModuleFile key={item.id} item={item} data={data} setData={setData} />
+                        }
                         return <ModuleLink key={item.id} item={item} data={data} setData={setData} />
-                    }
-                })}
+
+                    })}
+                </SortableContext>
             </div>
         </div>
     )
